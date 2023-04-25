@@ -1,13 +1,11 @@
-import LeftBar from "./leftBar.js"
-import RightBar from "./rightBar.js";
+import LeftBar from "./components/leftBar.js"
+import RightBar from "./components/rightBar.js";
 
 export default function App(){ 
   return (
-    <div className="container">
-        <div className="row">
+        <div>
           <LeftBar/>
           <RightBar/>
         </div>
-    </div>
   );
 }

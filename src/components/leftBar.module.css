@@ -1,0 +1,54 @@
+.container {
+    position: fixed;
+    top : 0%;
+    left: 0%;
+    bottom: 0;
+    height: 100%;
+    width: 20%;
+
+    background-color: rgb(77, 77, 77);
+
+    align-items: center;
+}
+
+.usernameLabel{
+    text-align: center;
+    color: white;
+}
+
+.usernameTextArea{
+    width: 90%;
+    margin-top: -3%;
+    margin-left: 3%;
+}
+
+.openRoom{
+    position: fixed;
+    top : 90%;
+    left: 0%;
+    height: 5%;
+    width: 20%;
+
+    text-align: center;
+    font-size: 1.5vmax;
+    color : white;
+
+    background-color: rgb(92, 92, 92);
+    border-color: rgb(57, 57, 57);
+
+}
+
+.searchRoom{
+    position: fixed;
+    top : 95%;
+    left: 0%;
+    height: 5%;
+    width: 20%;
+
+    text-align: center;
+    font-size: 1.5vmax;
+    color : white;
+
+    background-color: rgb(92, 92, 92);
+    border-color: rgb(57, 57, 57);
+}

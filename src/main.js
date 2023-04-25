@@ -9,8 +9,10 @@ let win = null;
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1000,
+    height: 1000,
+    minHeight: 1000,
+    minWidth: 1000,
     backgroundColor:"#333333",
     webPreferences: {
       nodeIntegration: true,

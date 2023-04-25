@@ -1,0 +1,6 @@
+.container{
+    margin-top: 10%;
+    height: 75%;
+    overflow-y: scroll;
+    background-color: rgb(61, 61, 61);
+}

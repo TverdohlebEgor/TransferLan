@@ -1,0 +1,46 @@
+.container {
+    margin-left: 20%;
+    display: grid;
+}
+
+.currentRoomHeader{
+    background-color: gray;
+    text-align: center;
+    font-size: 1.7em;
+    height: auto;
+}
+
+.messageArea{
+    width: 80%;
+    position: fixed;
+    bottom: 0%;
+    
+    display: grid;
+        grid-template-columns: 5fr 1fr 1fr;
+        grid-template-rows: 1fr; 
+        gap: 0px 0px; 
+        grid-template-areas: 
+          "TextArea TextButton FileButton"; 
+}
+
+.textArea{
+    grid-area: TextArea;
+    padding: 10px;
+    background-color: gray;
+    color: white;
+    border-color: black;
+}
+
+.buttonMessage{
+    grid-area: TextButton;
+    background-color: gray;
+    color: white;
+    border-color: black;
+}
+
+.buttonFile{
+    grid-area: FileButton;
+    background-color: gray;
+    color: white;
+    border-color: black;
+}
