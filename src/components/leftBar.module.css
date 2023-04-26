@@ -38,6 +38,18 @@
 
 }
 
+.openRoom:hover{
+    background-color: rgb(69, 69, 69);
+}
+
+.openRoom:active{
+    background-color: rgb(35, 35, 35);
+}
+
+.openRoom:disabled{
+    background-color: rgb(7, 7, 7);
+}
+
 .searchRoom{
     position: fixed;
     top : 95%;
@@ -51,4 +63,16 @@
 
     background-color: rgb(92, 92, 92);
     border-color: rgb(57, 57, 57);
+}
+
+.searchRoom:hover{
+    background-color: rgb(69, 69, 69);
+}
+
+.searchRoom:active{
+    background-color: rgb(35, 35, 35);
+}
+
+.searchRoom:disabled{
+    background-color: rgb(7, 7, 7);
 }

@@ -1,5 +1,5 @@
 {
-  "name": "can-i-enter",
+  "name": "transferLan",
   "version": "1.0",
   "description": "App made to let my parents know if they can or cannot enter my room",
   "license": "MIT",
@@ -13,6 +13,7 @@
     "dgram": "^1.0.1",
     "electron-is-dev": "^2.0.0",
     "electron-squirrel-startup": "^1.0.0",
+    "net": "^1.0.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.4",
     "react-dom": "^18.2.0",
@@ -28,7 +29,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron-react": "concurrently \"SET BROWSER=none&&npm run start-react\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-react": "concurrently \"BROWSER=none npm run start-react\" \"wait-on http://localhost:3000 && electron .\"",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
@@ -59,7 +60,7 @@
     "electron": "^23.1.1"
   },
   "comments": {
-    "startLinux": "concurrently -k \"BROWSER=none npm run next-dev\" \"npm run electron-start\"",
-    "startWindows": "concurrently \"SET BROWSER=none&&npm run next-dev\" \"npm run electron-start\""
+    "startLinux": "concurrently \"BROWSER=none npm run start-react\" \"wait-on http://localhost:3000 && electron .\"",
+    "startWindows": "concurrently \"SET BROWSER=none&&npm run start-react\" \"wait-on http://localhost:3000 && electron .\""
   }
 }

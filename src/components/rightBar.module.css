@@ -38,9 +38,25 @@
     border-color: black;
 }
 
+.buttonMessage:hover{
+    background-color: rgb(109, 109, 109);
+}
+
+.buttonMessage:active{
+    background-color: rgb(98, 98, 98);
+}
+
 .buttonFile{
     grid-area: FileButton;
     background-color: gray;
     color: white;
     border-color: black;
+}
+
+.buttonFile:hover{
+    background-color: rgb(109, 109, 109);
+}
+
+.buttonFile:active{
+    background-color: rgb(98, 98, 98);
 }

@@ -1,10 +1,16 @@
 import classes from "./roomPossibilites.module.css"
+const ipcRenderer = window.electron.ipcRenderer;
 
-export default function RoomPossibilites(){ 
+
+async function EnterButtonPressed(roomOwnerName,roomOwnerIp){
+  ipcRenderer.send("EnteringRoom",[roomOwnerName,roomOwnerIp]);
+}
+
+export default function RoomPossibilites(props){ 
     return (
       <div className={classes.container}>
-        ROOMNAME
-        <button> ENTER </button>
+        {props.name}
+        <button onClick={() => EnterButtonPressed(props.name,props.ip)}> ENTER </button>
       </div>
     );
   }

@@ -2,11 +2,18 @@ import classes from "./rightBar.module.css";
 
 import Chat from "./chat";
 
-export default function RightBar(){ 
+export default function RightBar(props){ 
+
+    let Header;
+
+    if(props.roomStatus === "inNoRoom") Header = "In no room";
+    else if(props.roomStatus === "roomGuest") Header = "In "+props.roomOwnerName+" room";
+    else if(props.roomStatus === "roomOwner") Header = "In your room";
+
     return (
         <div className={classes.container}>
             <div className={classes.currentRoomHeader}>
-                IN X ROOM / IN NO ROOM
+                {Header}
             </div>
             <Chat/>
             <div className={classes.messageArea}>
