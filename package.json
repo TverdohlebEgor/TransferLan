@@ -28,7 +28,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron-react": "concurrently \"BROWSER=none npm run start-react\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-react": "concurrently \"SET BROWSER=none&&npm run start-react\" \"wait-on http://localhost:3000 && electron .\"",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
@@ -57,5 +57,9 @@
     "@electron-forge/maker-squirrel": "^6.0.5",
     "@electron-forge/maker-zip": "^6.0.5",
     "electron": "^23.1.1"
+  },
+  "comments": {
+    "startLinux": "concurrently -k \"BROWSER=none npm run next-dev\" \"npm run electron-start\"",
+    "startWindows": "concurrently \"SET BROWSER=none&&npm run next-dev\" \"npm run electron-start\""
   }
 }
