@@ -25,7 +25,7 @@ function handleSearchingMessages(username){
         console.log(ms.toString());
         console.log(rinfo);
         if(ms.toString().slice(0,14) === "SEARCHING_ROOM"){
-            UDP_socket.send("HERE_ROOM",UDP_CLIENT_PORT,BROADCAST_IP);
+            UDP_socket.send("HERE_ROOM "+username,UDP_CLIENT_PORT,BROADCAST_IP);
         }
     })
 }
@@ -41,7 +41,7 @@ function handleTCPConnection(){
     });
 
     sock.on("close",() => {
-        connected_socket = connected_socket.filter((val) => val === sock);
+        connected_socket = connected_socket.filter((val) => val !== sock);
     })
 
     connected_socket.push(sock);

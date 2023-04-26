@@ -33,7 +33,9 @@ export default function App(){
             setRoomStatus = {setRoomStatus}
             username = {username}
             setUsername = {setUsername}
-            roomsFounded = {roomsFounded}/>
+            roomsFounded = {roomsFounded}
+            setRoomOwnerName = {setRoomOwnerName}
+            />
           <RightBar
             roomStatus = {roomStatus}
             setRoomStatus = {setRoomStatus}

@@ -14,9 +14,10 @@ async function SearchButtonPress(isSearching){
     ipcRenderer.send("StopRoomOwnerSearch");
 }
 
-async function OpenButtonPress(setRoomStatus){
+async function OpenButtonPress(setRoomStatus,setRoomOwnerName,username){
+  setRoomOwnerName(username);
   setRoomStatus("roomOwner");
-  ipcRenderer.send("ImRoomOwner")
+  ipcRenderer.send("ImRoomOwner",username);
 }
 
 export default function LeftBar(props){
@@ -28,7 +29,7 @@ export default function LeftBar(props){
         <PossibleRooms
           roomsFounded = {props.roomsFounded}
         />
-        <button className={classes.openRoom} disabled={!props.username || props.roomStatus === "roomOwner"} onClick={() => OpenButtonPress(props.setRoomStatus)}> OPEN ROOM </button>
+        <button className={classes.openRoom} disabled={!props.username || props.roomStatus === "roomOwner"} onClick={() => OpenButtonPress(props.setRoomStatus,props.setRoomOwnerName,props.username)}> OPEN ROOM </button>
         <button className={classes.searchRoom} disabled={!props.username} onClick={() => SearchButtonPress(isSearching)}> {isSearching ? "IS SEARCHING" : "SEARCH ROOM"}</button>
       </div>
     );

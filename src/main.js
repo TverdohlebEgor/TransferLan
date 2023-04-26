@@ -31,7 +31,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
-
+  
   win.loadURL(
     isDev
       ? 'http://localhost:3000'
@@ -87,10 +87,10 @@ ipcMain.on("EnteringRoom",(event,value) => {
   connectToTCPServer(value[1][0]);
 })
 
-ipcMain.on("ImRoomOwner",() => {
+ipcMain.on("ImRoomOwner",(event,ms) => {
   stopSearchingServer();
   roomOwner = true;
 
   createUDPSocketServer();
-  handleSearchingMessages("roomOwner");
+  handleSearchingMessages(ms);
 })
