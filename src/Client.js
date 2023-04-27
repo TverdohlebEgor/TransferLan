@@ -50,6 +50,15 @@ function handleServerFounded(){
 function connectToTCPServer(ip){
     TCP_socket = new net.Socket();
     TCP_socket.connect(TCP_SERVER_PORT,ip);
+    TCP_socket.on("data", (ms) => {
+        console.log("recived from server -> " + ms);
+        myEmitter.emit("MESSAGE_TO_DISPLAY",ms);
+    })
+}
+
+function sendMessageToTCPServer(ms){
+    if(!TCP_socket) return;
+    TCP_socket.write(ms);
 }
 
 module.exports = {
@@ -58,5 +67,7 @@ module.exports = {
     stopSearchingServer,
     handleServerFounded,
     myEmitter,
-    connectToTCPServer
+    connectToTCPServer,
+    sendMessageToTCPServer
+
 }

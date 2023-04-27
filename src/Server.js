@@ -7,6 +7,8 @@ const UDP_SERVER_PORT = 9292;
 const TCP_CLIENT_PORT = 9293;
 const TCP_SERVER_PORT = 9292;
 
+const {myEmitter} = require("./Client")
+
 let UDP_socket;
 let TCP_server;
 let connected_socket = [];
@@ -20,7 +22,6 @@ function createUDPSocketServer(){
 }
 
 function handleSearchingMessages(username){
-    console.log("handling searching messages");
     UDP_socket.on("message",(ms,rinfo) => {
         console.log(ms.toString());
         console.log(rinfo);
@@ -32,19 +33,25 @@ function handleSearchingMessages(username){
 
 function handleTCPConnection(){
     TCP_server.on("connection",(sock) => {
-        console.log("connected to sock ",sock);
-    })
+        console.log("connected to sock ",sock.remoteAddress);
 
-    sock.on("data",(ms) => {
-        //TODO : Handle messages and files
-        console.log("TODO : Handle messages and files");
+        sock.on("data",(ms) => {
+            serverSendMessage(ms);
+        });
+
+        sock.on("close",() => {
+            connected_socket = connected_socket.filter((val) => val !== sock);
+            console.log("disconnected to sock ",sock.remoteAddress);
+        })
+
+        connected_socket.push(sock);
     });
 
-    sock.on("close",() => {
-        connected_socket = connected_socket.filter((val) => val !== sock);
-    })
+}
 
-    connected_socket.push(sock);
+function serverSendMessage(ms){
+    broadcastMessageTCP(ms);
+    myEmitter.emit("MESSAGE_TO_DISPLAY",ms);
 }
 
 function createTCPServer(){
@@ -53,9 +60,15 @@ function createTCPServer(){
     handleTCPConnection();
 }
 
+function broadcastMessageTCP(ms){
+    connected_socket.forEach((sock) => {
+        sock.write(ms);
+    })
+}
+
 module.exports = {
     createUDPSocketServer,
     handleSearchingMessages,
     createTCPServer,
-
+    serverSendMessage
 }

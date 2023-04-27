@@ -1,7 +1,15 @@
-export default function Chat(){ 
+import classes from "./chat.module.css";
+
+export default function Chat(props){ 
     return (
       <div>
-        Chat
+        {
+          props.messagesDisplayed.map(
+            (value) => {return(<p className={classes.message}>
+              {value}
+            </p>) }
+          )
+        }
       </div>
     );
   }

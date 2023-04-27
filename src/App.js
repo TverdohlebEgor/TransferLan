@@ -7,14 +7,16 @@ const ipcRenderer = window.electron.ipcRenderer;
 export default function App(){ 
 
   const [roomOwnerName,setRoomOwnerName] = useState(null);
-  const [roomOwnerIp,setRoomOwnerIp] = useState(null);
-  const [roomsFounded,setRoomsFounded] = useState({});
   const [roomStatus,setRoomStatus] = useState("inNoRoom"); // inNoRoom | roomOwner | roomGuest
   const [username,setUsername] = useState("");
+  const [message,setMessage] = useState("");
+  const [roomsFounded,setRoomsFounded] = useState({});
+  const [messagesDisplayed , setMessagesDisplayed] = useState([]);
+  
   useEffect(() => {
     ipcRenderer.on("ROOM_FOUNDED",(event,ms) => {
       setRoomsFounded(
-        {
+        { 
           ...roomsFounded,
           ...{[ms.slice(0,ms.indexOf("@"))] : [ms.slice(ms.indexOf("@")+1)]}
         });
@@ -23,8 +25,12 @@ export default function App(){
         setRoomStatus("roomGuest");
           setRoomOwnerName(ms);
         });
+      ipcRenderer.on("MESSAGE_TO_DISPLAY",(event,ms) => { 
+        setMessagesDisplayed(messagesDisplayed.concat(ms));
+        console.log(messagesDisplayed)
+      })
     return;
-  },[roomsFounded]);
+  },[roomsFounded,messagesDisplayed]);
 
   return (
         <div>
@@ -42,6 +48,9 @@ export default function App(){
             username = {username}
             setUsername = {setUsername}
             roomOwnerName = {roomOwnerName}
+            message = {message}
+            setMessage = {setMessage}
+            messagesDisplayed = {messagesDisplayed}
             />
         </div>
   );

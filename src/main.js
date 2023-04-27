@@ -3,15 +3,18 @@ const { createUDPSocketClient,
   stopSearchingServer,
   handleServerFounded,
   myEmitter,
-  connectToTCPServer
+  connectToTCPServer,
+  sendMessageToTCPServer
 } = require("./Client");
 
-module.exports = {
+const {
   createUDPSocketServer,
-  handleSearchingMessages
+  handleSearchingMessages,
+  createTCPServer,
+  serverSendMessage
 } = require("./Server");
 
-const { app, BrowserWindow, ipcMain , Notification} = require('electron');
+const { app, BrowserWindow, ipcMain} = require('electron');
 
 const path = require("path")
 
@@ -34,7 +37,7 @@ function createWindow() {
   
   win.loadURL(
     isDev
-      ? 'http://localhost:3000'
+      ? (process.env.PORT || 'http://localhost:3000')
       : `file://${path.join(__dirname, '../build/index.html')}`
   );
   
@@ -81,8 +84,11 @@ myEmitter.on("ROOM_FOUNDED",(ms) => {
   win.webContents.send("ROOM_FOUNDED",ms);
 })
 
+myEmitter.on("MESSAGE_TO_DISPLAY",(ms) => {
+  win.webContents.send("MESSAGE_TO_DISPLAY",ms.toString());
+})
+
 ipcMain.on("EnteringRoom",(event,value) => {
-  console.log(value);
   win.webContents.send("IM_IN_ROOM",value[0]);
   connectToTCPServer(value[1][0]);
 })
@@ -93,4 +99,13 @@ ipcMain.on("ImRoomOwner",(event,ms) => {
 
   createUDPSocketServer();
   handleSearchingMessages(ms);
+  createTCPServer();
+})
+
+ipcMain.on("roomGuestSendMessage",(event,ms) => {
+  sendMessageToTCPServer(ms);
+})
+
+ipcMain.on("roomOwnerSendMessage",(event,ms) => {
+  serverSendMessage(ms);
 })
