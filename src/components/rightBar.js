@@ -12,6 +12,13 @@ async function ButtonMessagePressed(roomStatus,ms,setMessage){
     setMessage("");
 }
 
+async function ButtonFilePressed(roomStatus,ms){
+if(roomStatus === "roomGuest")
+    ipcRenderer.send("clientChooseFileToSend",ms);
+else if(roomStatus === "roomOwner")
+    ipcRenderer.send("serverChooseFileToSend",ms);
+}
+
 export default function RightBar(props){ 
 
     let Header;
@@ -26,12 +33,13 @@ export default function RightBar(props){
                 {Header}
             </div>
             <Chat
-                messagesDisplayed = {props.messagesDisplayed}    
+                messagesDisplayed = {props.messagesDisplayed}
+                roomStatus = {props.roomStatus}    
             />
             <div className={classes.messageArea}>
-                <textarea className={classes.textArea} value={props.message} onChange={(event) => {props.setMessage(event.target.value)}}></textarea>
-                <button className={classes.buttonMessage} onClick={() => ButtonMessagePressed(props.roomStatus,props.username+"@"+props.message,props.setMessage)}>{">"}</button>
-                <button className={classes.buttonFile}>FILE</button>
+                <textarea className={classes.textArea} disabled={props.roomStatus === "inNoRoom"} value={props.message} onChange={(event) => {props.setMessage(event.target.value)}}></textarea>
+                <button className={classes.buttonMessage} disabled={props.roomStatus === "inNoRoom"} onClick={() => ButtonMessagePressed(props.roomStatus,props.username+"@"+props.message,props.setMessage)}>{">"}</button>
+                <button className={classes.buttonFile} disabled={props.roomStatus === "inNoRoom"} onClick={() => ButtonFilePressed(props.roomStatus,props.username)}>FILE</button>
             </div>
         </div>
 

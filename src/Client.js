@@ -2,6 +2,8 @@ const dgram = require("dgram");
 const net = require("net");
 const { EventEmitter } = require('node:events');
 const myEmitter = new EventEmitter();
+const fs = require("fs");
+const ftp = require("basic-ftp");
 
 const BROADCAST_IP = "255.255.255.255";
 
@@ -9,12 +11,20 @@ const UDP_CLIENT_PORT = 9293;
 const UDP_SERVER_PORT = 9292;
 const TCP_CLIENT_PORT = 9293;
 const TCP_SERVER_PORT = 9292;
+const FTP_PORT = 9294;
+
+const FILE_MESSAGE_HEADER = "EFJ90S";
+const FILEREQUEST_MESSAGE_HEADER = "POM02X";
+const SERVER_NOW_HAS_FILE_HEADER = "HKDMQP"
 
 let SEARCHING_SERVER = false;
 let SEARCHING_TIME = 10 * 1000; // in ms
 
 let UDP_socket;
 let TCP_socket;
+let FTP_client;
+let semaforo = false;
+
 
 function createUDPSocketClient(){
     if(UDP_socket) return;
@@ -48,17 +58,88 @@ function handleServerFounded(){
 }
 
 function connectToTCPServer(ip){
+    TCP_server_ip = ip;
     TCP_socket = new net.Socket();
     TCP_socket.connect(TCP_SERVER_PORT,ip);
     TCP_socket.on("data", (ms) => {
-        console.log("recived from server -> " + ms);
-        myEmitter.emit("MESSAGE_TO_DISPLAY",ms);
+        if(ms.toString().slice(0,6) === FILEREQUEST_MESSAGE_HEADER){
+            console.log("Client has to respond to " + ms.toString());
+            respondeFileRequest(ms.toString().slice(6)).then(() => {
+                TCP_socket.write(SERVER_NOW_HAS_FILE_HEADER+ms.toString().slice(6));
+            });
+        }
+        else if(ms.toString().slice(0,6) === SERVER_NOW_HAS_FILE_HEADER){
+            // server now has the file that we have asked for
+            //console.log("I HAVE RECEIVE THE MESSAGE "+ ms.toString().slice(0,6))
+            downloadFromServer(ms.toString().slice(ms.indexOf("/")));
+        }
+        else{
+            console.log("recived from server -> " + ms);
+            myEmitter.emit("MESSAGE_TO_DISPLAY",ms);
+        }
     })
+}
+
+function sendFileToTCPServer(ms){
+    if(!TCP_socket)return;
+    console.log("WANT SEND FILE AT "+ms +" TO SERVER");
+    TCP_socket.write(FILE_MESSAGE_HEADER+ms)
 }
 
 function sendMessageToTCPServer(ms){
     if(!TCP_socket) return;
     TCP_socket.write(ms);
+}
+
+function requestFileToTCPServer(ms){
+    if(!TCP_socket) return;
+    TCP_socket.write(ms);
+}
+
+async function respondeFileRequest(request){
+    semaforo = true;
+    let currentClientFilePosition =request.slice(request.indexOf("/"),request.indexOf("%")); 
+    
+    try{
+        FTP_client = new ftp.Client();
+        
+        await FTP_client.access({
+            host : "0.0.0.0",
+            port : 9294,
+        })
+        await FTP_client.uploadFrom(currentClientFilePosition,"./download/"+currentClientFilePosition.slice(currentClientFilePosition.lastIndexOf("/")));
+        
+        
+    }
+
+    catch(err){
+        console.log(err);
+    }
+    FTP_client.close();
+    semaforo = false;
+}
+
+async function downloadFromServer(ms){
+    let positionInOriginalClient = ms.slice(1,ms.indexOf("%"))
+    let positionInServer = "/download"+positionInOriginalClient.slice(positionInOriginalClient.lastIndexOf("/"));
+    let positionToDownload = ms.slice(ms.indexOf("%")+1)+positionInServer.slice(positionInServer.lastIndexOf("/"));  
+    
+    try{
+        FTP_client = new ftp.Client();
+
+        await FTP_client.access({
+            host : "0.0.0.0",
+            port : 9294,
+        })
+
+        await FTP_client.downloadTo(positionToDownload,positionInServer);
+        
+        
+    }
+    catch(err){
+        console.log(err);
+    }
+    FTP_client.close();
 }
 
 module.exports = {
@@ -68,6 +149,8 @@ module.exports = {
     handleServerFounded,
     myEmitter,
     connectToTCPServer,
-    sendMessageToTCPServer
+    sendMessageToTCPServer,
+    sendFileToTCPServer,
+    requestFileToTCPServer
 
 }

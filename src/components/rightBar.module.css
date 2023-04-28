@@ -31,6 +31,10 @@
     border-color: black;
 }
 
+.textArea:disabled{
+    background-color: rgb(44, 44, 44);
+}
+
 .buttonMessage{
     grid-area: TextButton;
     background-color: gray;
@@ -46,6 +50,10 @@
     background-color: rgb(98, 98, 98);
 }
 
+.buttonMessage:disabled{
+    background-color: rgb(26, 26, 26);
+}
+
 .buttonFile{
     grid-area: FileButton;
     background-color: gray;
@@ -59,4 +67,8 @@
 
 .buttonFile:active{
     background-color: rgb(98, 98, 98);
+}
+
+.buttonFile:disabled{
+    background-color: rgb(26, 26, 26);
 }

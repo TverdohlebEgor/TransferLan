@@ -27,7 +27,9 @@ export default function App(){
         });
       ipcRenderer.on("MESSAGE_TO_DISPLAY",(event,ms) => { 
         setMessagesDisplayed(messagesDisplayed.concat(ms));
-        console.log(messagesDisplayed)
+      });
+      ipcRenderer.on("SERVER_IS_CLOSING",(event,ms) => {
+        setRoomStatus("inNoRoom")
       })
     return;
   },[roomsFounded,messagesDisplayed]);
