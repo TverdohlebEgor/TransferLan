@@ -31,10 +31,10 @@ let win = null;
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 1000,
-    height: 1000,
-    minHeight: 1000,
-    minWidth: 1000,
+    width: 800,
+    height: 800,
+    minHeight: 800,
+    minWidth: 800,
     backgroundColor:"#333333",
     webPreferences: {
       nodeIntegration: true,
@@ -135,6 +135,7 @@ ipcMain.on("serverFileRequest",(event,ms) => {
   }).then((response) => {
     //TODO
     console.log("TODO MAKE SERVER CAPABLE OF DOWNLOADING STUFF");
+    console.log(ms.toString().substr(6)+"%"+response["filePaths"]);
     //requestFileToTCPServer(FILEREQUEST_MESSAGE_HEADER+ms.toString().substr(6)+"%"+response["filePaths"]);
   })
 })

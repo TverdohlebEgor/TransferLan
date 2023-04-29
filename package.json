@@ -28,13 +28,13 @@
   "homepage": "./",
   "scripts": {
     "start-react": "react-scripts start",
-    "start-react-port3001": "PORT=3001 react-scripts start",
+    "start-react-port3001": "SET PORT=3001 && react-scripts start",
     "start": "electron-forge start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron-react-port3001": "concurrently \"BROWSER=none npm run start-react-port3001\" \"wait-on http://localhost:3001 && electron .\"",
-    "electron-react": "concurrently \"BROWSER=none npm run start-react\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-react-port3001": "concurrently \"SET BROWSER=none && npm run start-react-port3001\" \"wait-on http://localhost:3001 && electron .\"",
+    "electron-react": "concurrently \"SET BROWSER=none && npm run start-react\" \"wait-on http://localhost:3000 && electron .\"",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },

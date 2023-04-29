@@ -13,6 +13,8 @@ const TCP_CLIENT_PORT = 9293;
 const TCP_SERVER_PORT = 9292;
 const FTP_PORT = 9294;
 
+const slashForOs = process.platform === "win32" ? "\\" : "/";
+
 const FILE_MESSAGE_HEADER = "EFJ90S";
 const FILEREQUEST_MESSAGE_HEADER = "POM02X";
 const SERVER_NOW_HAS_FILE_HEADER = "HKDMQP"
@@ -23,7 +25,6 @@ let SEARCHING_TIME = 10 * 1000; // in ms
 let UDP_socket;
 let TCP_socket;
 let FTP_client;
-let semaforo = false;
 
 
 function createUDPSocketClient(){
@@ -107,7 +108,7 @@ async function respondeFileRequest(request){
             host : "0.0.0.0",
             port : 9294,
         })
-        await FTP_client.uploadFrom(currentClientFilePosition,"./download/"+currentClientFilePosition.slice(currentClientFilePosition.lastIndexOf("/")));
+        await FTP_client.uploadFrom(currentClientFilePosition,"./download/"+currentClientFilePosition.slice(currentClientFilePosition.lastIndexOf(slashForOs))); // / for linux \\ for windows
         
         
     }
@@ -121,8 +122,12 @@ async function respondeFileRequest(request){
 
 async function downloadFromServer(ms){
     let positionInOriginalClient = ms.slice(1,ms.indexOf("%"))
-    let positionInServer = "/download"+positionInOriginalClient.slice(positionInOriginalClient.lastIndexOf("/"));
-    let positionToDownload = ms.slice(ms.indexOf("%")+1)+positionInServer.slice(positionInServer.lastIndexOf("/"));  
+    let positionInServer = "/download"+positionInOriginalClient.slice(positionInOriginalClient.lastIndexOf(slashForOs)); //Same things here / for linux \\ for windows
+    let positionToDownload = ms.slice(ms.indexOf("%")+1)+positionInServer.slice(positionInServer.lastIndexOf(slashForOs));  // as above
+
+    console.log(positionInOriginalClient)
+    console.log(positionInServer)
+    console.log(positionToDownload)
     
     try{
         FTP_client = new ftp.Client();

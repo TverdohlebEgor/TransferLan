@@ -14,6 +14,8 @@ const FILE_MESSAGE_HEADER = "EFJ90S";
 const FILEREQUEST_MESSAGE_HEADER = "POM02X";
 const SERVER_NOW_HAS_FILE_HEADER = "HKDMQP"
 
+const slashForOs = process.platform === "win32" ? "\\" : "/";
+
 const {myEmitter} = require("./Client")
 
 let UDP_socket;
@@ -55,10 +57,10 @@ function handleTCPConnection(){
                     //server has file
                     console.log("SERVER HAS IT -> " + ms.toString().slice(6));
                     let partialMs = ms.toString().slice(0,ms.toString().indexOf("%"));
-                    let fileName = partialMs.slice(partialMs.toString().lastIndexOf("/")+1);
+                    let fileName = partialMs.slice(partialMs.toString().lastIndexOf(slashForOs)+1); //Here if I put a \ work for linux and a // for windows. TODO find a fix
                     console.log(partialMs);
                     console.log(fileName);
-                    fs.copyFile(ms.toString().slice(ms.indexOf("/")+1,ms.indexOf("%")),process.cwd()+"/download/"+fileName,(err) => {
+                    fs.copyFile(ms.toString().slice(ms.indexOf("/")+1,ms.indexOf("%")),process.cwd()+slashForOs+"download"+slashForOs+fileName,(err) => {
                         if(err)console.log(err);
                         else{
                             console.log("I should have copyed it")
