@@ -15,7 +15,7 @@ const {
   createTCPServer,
   createFPTServer,
   serverSendMessage,
-  
+  broadcastMessageTCP
 } = require("./Server");
 
 const { app, BrowserWindow, ipcMain, dialog} = require('electron');
@@ -24,10 +24,13 @@ const path = require("path")
 
 const isDev = require('electron-is-dev');
 
+const fs = require("fs");
+
 const FILE_MESSAGE_HEADER = "EFJ90S";
 const FILEREQUEST_MESSAGE_HEADER = "POM02X";
 
 let win = null;
+const slashForOs = process.platform === "win32" ? "\\" : "/";
 
 function createWindow() {
   win = new BrowserWindow({
@@ -96,13 +99,11 @@ myEmitter.on("MESSAGE_TO_DISPLAY",(ms) => {
 ipcMain.on("EnteringRoom",(event,value) => {
   win.webContents.send("IM_IN_ROOM",value[0]);
   connectToTCPServer(value[1][0]);
-  myEmitter.emit("ENTERING_ROOM")
+  myEmitter.emit("ENTERING_ROOM");
 })
 
 ipcMain.on("ImRoomOwner",(event,ms) => {
   stopSearchingServer();
-  roomOwner = true;
-
   createUDPSocketServer();
   handleSearchingMessages(ms);
   createTCPServer();
@@ -133,10 +134,26 @@ ipcMain.on("serverFileRequest",(event,ms) => {
       "openDirectory"
     ]
   }).then((response) => {
-    //TODO
-    console.log("TODO MAKE SERVER CAPABLE OF DOWNLOADING STUFF");
-    console.log(ms.toString().substr(6)+"%"+response["filePaths"]);
-    //requestFileToTCPServer(FILEREQUEST_MESSAGE_HEADER+ms.toString().substr(6)+"%"+response["filePaths"]);
+    let fileName = ms.toString().slice(ms.toString().lastIndexOf(slashForOs));
+    let originPosition = ms.toString().slice(ms.toString().indexOf(slashForOs));
+    let destinyPosition = response["filePaths"]+fileName;
+    //Try to copy the file
+    try{
+      fs.copyFile(originPosition,destinyPosition,() => {
+        console.log("Success!")
+      });
+    }
+    //If fails send file to request
+    catch(err){
+      console.log("FILE NOT FOUND ASKING THE CLIENT");
+      try{
+        broadcastMessageTCP(FILEREQUEST_MESSAGE_HEADER+ms.toString().substr(6)+"%"+response["filePaths"]);
+        fs.copyFile(process.cwd()+slashForOs+"download"+slashForOs+fileName,destinyPosition);
+        }
+      catch(err){
+        console.log(err);
+      }
+    }
   })
 })
 

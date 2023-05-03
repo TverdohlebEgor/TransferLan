@@ -58,8 +58,6 @@ function handleTCPConnection(){
                     console.log("SERVER HAS IT -> " + ms.toString().slice(6));
                     let partialMs = ms.toString().slice(0,ms.toString().indexOf("%"));
                     let fileName = partialMs.slice(partialMs.toString().lastIndexOf(slashForOs)+1); //Here if I put a \ work for linux and a // for windows. TODO find a fix
-                    console.log(partialMs);
-                    console.log(fileName);
                     fs.copyFile(ms.toString().slice(ms.indexOf("/")+1,ms.indexOf("%")),process.cwd()+slashForOs+"download"+slashForOs+fileName,(err) => {
                         if(err)console.log(err);
                         else{
@@ -140,5 +138,6 @@ module.exports = {
     handleSearchingMessages,
     createTCPServer,
     createFPTServer,
-    serverSendMessage
+    serverSendMessage,
+    broadcastMessageTCP
 }

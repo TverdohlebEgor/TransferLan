@@ -98,8 +98,7 @@ function requestFileToTCPServer(ms){
 }
 
 async function respondeFileRequest(request){
-    semaforo = true;
-    let currentClientFilePosition =request.slice(request.indexOf("/"),request.indexOf("%")); 
+    let currentClientFilePosition =request.slice(request.indexOf(slashForOs),request.indexOf("%")); 
     
     try{
         FTP_client = new ftp.Client();
@@ -108,16 +107,18 @@ async function respondeFileRequest(request){
             host : "0.0.0.0",
             port : 9294,
         })
+
+        //console.log("ASPE IS THIS THE ERROR? -> " +currentClientFilePosition);        
         await FTP_client.uploadFrom(currentClientFilePosition,"./download/"+currentClientFilePosition.slice(currentClientFilePosition.lastIndexOf(slashForOs))); // / for linux \\ for windows
         
         
     }
 
     catch(err){
-        console.log(err);
+        console.log("This client doesn't have the file requested");
+        console.log(err); // TODO makeThisAComment
     }
     FTP_client.close();
-    semaforo = false;
 }
 
 async function downloadFromServer(ms){
