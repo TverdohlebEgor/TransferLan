@@ -107,8 +107,7 @@ async function respondeFileRequest(request){
             host : "0.0.0.0",
             port : 9294,
         })
-
-        //console.log("ASPE IS THIS THE ERROR? -> " +currentClientFilePosition);        
+       
         await FTP_client.uploadFrom(currentClientFilePosition,"./download/"+currentClientFilePosition.slice(currentClientFilePosition.lastIndexOf(slashForOs))); // / for linux \\ for windows
         
         

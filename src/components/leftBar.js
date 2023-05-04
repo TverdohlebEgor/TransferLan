@@ -24,7 +24,7 @@ export default function LeftBar(props){
   [isSearching,setIsSearching] = useState(false);
     return (
       <div className={classes.container}>
-        <h1 className={classes.usernameLabel}>USERNAME</h1>
+        <h2 className={classes.usernameLabel}>USERNAME</h2>
         <input type={"text"} className={classes.usernameTextArea} onChange={(event) => {props.setUsername(event.target.value)}}></input>
         <PossibleRooms
           roomsFounded = {props.roomsFounded}
